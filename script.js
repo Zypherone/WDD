@@ -9,8 +9,8 @@ var appParam = '';
 
 var apiKey   = '469a1bcd8ede3e2121d54a82776ffc16',
     appUnit  = 'metric',
-    endPoint = 'http://api.openweathermap.org/data/2.5/{PAGE}?appid=' + apiKey,
-    iconURL  = 'http://openweathermap.org/img/wn/10d@2x.png';
+    endPoint = 'https://api.openweathermap.org/data/2.5/{PAGE}?appid=' + apiKey,
+    iconURL  = 'https://openweathermap.org/img/wn/10d@2x.png';
 
 
 function success(position) {
