@@ -4,13 +4,67 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>AMT - A Moment In Time - Work Day Scheduler</title>
+    <title>WDD - Weather Dashboard</title>
     <link rel="stylesheet" href="styles.css" />
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="moment.min.js"></script>
+    
   </head>
   <body>
+    <div id="outer-container">
+      <div id="inner-container">
+      <header>
+        <h1>Weather Dashboard</h1>
+      </header>
+      <section>
+        <nav>
+          <form>
+            <label>Search for a City</label>
+            <input type="text" name="query" />
+            <input type="submit" value="&#128269;" />
+          </form>
+          <div id="weather-history">
+            <ul>
+              <li>London, UK</li>
+              <li>Bristol, UK</li>
+              <li>New York, USA</li>
+              <li>Sydney, AU</li>
+              <li>Singapore, SG</li>
+              <li>Jakarta, ID</li>
+              <li>New Delhi, IN</li>
+              <li>Los Angeles, USA</li>
+              <li>Dallas, USA</li>
+              <li>Paris, FR</li>
+              <li>Auckland, NZ</li>
+            </ul>
+          </div>
+        </nav>
+        <div id="weather-info-block">
+          <div id="weather-current">
+            <h2>London, UK</h2>
+            <div id="weather-detailed">
+              <span class="weather-temperature" data-data="Temperature">1</span>
+              <span class="weather-humidity" data-data="Humidity">2</span>
+              <span class="weather-wind-speed" data-data="Wind Speed">3</span>
+              <span class="weather-uv-index" data-data="UV Index">4</span>
+            </div>
+          </div>
+          <div id="weather-forcast">
+            <h3>5-Day Forcast:</h3>
+            <div class="forcast-info">
+              <div class="forcast-day day-1">Day 1</div>
+              <div class="forcast-day day-2">Day 2</div>
+              <div class="forcast-day day-3">Day 3</div>
+              <div class="forcast-day day-4">Day 4</div>
+              <div class="forcast-day day-5">Day 5</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
     
     <script src="script.js"></script>
+    
   </body>
 </html>
