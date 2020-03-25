@@ -12,6 +12,27 @@ var apiKey   = '469a1bcd8ede3e2121d54a82776ffc16',
     endPoint = 'http://api.openweathermap.org/data/2.5/{PAGE}?appid=' + apiKey,
     iconURL  = 'http://openweathermap.org/img/wn/10d@2x.png';
 
+
+function success(position) {
+  const latitude  = position.coords.latitude;
+  const longitude = position.coords.longitude;
+
+  //status.textContent = '';
+  //mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
+  console.log(`Latitude: ${latitude} °, Longitude: ${longitude} °`);
+}
+
+function error() {
+  //status.textContent = 'Unable to retrieve your location';
+}
+
+if (!navigator.geolocation) {
+  //status.textContent = 'Geolocation is not supported by your browser';
+} else {
+  //status.textContent = 'Locating…';
+  navigator.geolocation.getCurrentPosition(success, error);
+}
+
 // END CONFIG SECTION
 
 //endPoint = 'https://raw.githubusercontent.com/Zypherone/WDD/master/weather.json';
@@ -130,9 +151,11 @@ function getWeatherData() {
     template.info.uvIndex
       .attr('data-index-color', uvColor)
       .append(
-        $('<b>')
+        $('<a>')
           .html(data.uvi.value)
           .attr('style', 'background-color: ' + uvColor)
+          .attr('href', 'https://en.wikipedia.org/wiki/Ultraviolet_index#Index_usage')
+          .attr('target', '_blank')
           .attr('title', uvColorIndex[uvIdx][uvColor])
       );
 

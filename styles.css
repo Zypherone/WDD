@@ -189,9 +189,16 @@ span {
   margin: .5em 0;
 }
 
-span[data-index-color] b {
+span[data-index-color] a {
   border-radius: .2em;
   padding: .2em;
+}
+
+[target="_blank"]:after {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+  
+  padding: 0px 3px 0px 5px;
+  /*background: #F6D55C;*/
 }
 
 span::before {
