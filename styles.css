@@ -17,9 +17,9 @@ html {
 }
 
 body {
-  color: #202028;
-  font-family: sans-serif;
   background-color: #f9fbfd;
+  color: #202028;
+  font-family: 'Roboto', sans-serif;
   height: 100%;
 }
 
@@ -32,20 +32,20 @@ body {
 }
 
 #inner-container {
-  display: flex;
-  border-radius: .5em;
-  background: #a0a0a0;
-  height: 500px;
-  overflow: hidden;
-  width: 850px;  
-
   align-items: stretch;
-  justify-content: stretch;
+  background: #1A4A73;
+  border-radius: .5em;
+  display: flex;
   flex-direction: column;
+  height: 530px;
+  justify-content: stretch;
+  overflow: hidden;  
+  width: 850px;  
 }
 
 header {
-  background: #ED553B;
+  background: #1A4A73;
+  color: #ffffff;
   padding: 1em;
   width: 100%;
 }
@@ -55,6 +55,10 @@ h2,
 h3 {
   margin: 0;
   padding: 0;
+}
+
+h1 {
+  font-weight: normal;
 }
 
 h2 {
@@ -68,15 +72,14 @@ section {
 }
 
 nav {
-  background: #20639B;
-  color: #F6D55C;
-  display: flex;
   align-items: stretch;
-  justify-self: stretch;
-  flex-wrap: wrap;
-  
+  background: #2268A2;
+  border-radius: 0 .5em 0 0;
+  color: #AAD5F6;
+  display: flex; 
   flex-direction: column;
-  
+  flex-wrap: wrap;
+  justify-self: stretch;
   padding: 1em;
   width: 30%;
 }
@@ -104,18 +107,20 @@ label {
 }
 
 input[type="text"] {
+  background: #F0F5F5;
+  color: #495157;
   display: block;
   padding: 0.5em;
-  border: 1px solid #00325c;
+  border: 1px solid #1A4A72;
   border-radius: .5em 0 0 .5em;
   border-right: 0;
   width: 80%;
 
 }
 input[type="submit"] {
-  background: linear-gradient(-30deg, #20639b, #5b8fba);
-    color: #f6d55c;
-  border: 1px solid #00325c;
+  background: #F2F4F5;
+  color: #ABB5BD;
+  border: 1px solid #1A4A72;
 
   border-radius: 0 .5em .5em 0;
   cursor: pointer;
@@ -128,6 +133,7 @@ input[type="submit"]::after {
 
 #weather-history {
   background: #598db9;
+  border: 1px solid #1A4A73;
   border-radius: .5em;
   flex-grow: 1;
   flex-shrink: 1;
@@ -160,8 +166,8 @@ input[type="submit"]::after {
   text-overflow: ellipsis;
 }
 #weather-history li:hover {
-  background: #F6D55C;
-  color: #173F5F;
+  background: #1A4A72;
+  color: #AAD5F6;
 }
 #weather-history li:first-child:hover {
   border-radius: .5em .5em 0 0;
@@ -170,24 +176,27 @@ input[type="submit"]::after {
 
 
 #weather-info-block {
-  background: #F6D55C;
-  color: #173F5F;
-  flex-grow: 2;
-  padding: 1em;
-
+  align-items: stretch;
+  background: #FFFFFF;
+  border: 1px solid #1A4A73;
+  border-radius: .5em 0 .5em 0;
+  color: #8C6D1F;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  flex-grow: 2;
   justify-content: space-between;
+  padding: 1em;
 }
 
 #weather-current {
-  border: 1px solid #3e3e3e;
+  background: #FFFDF5;
+  border: 1px solid #F9E5A0;
   border-radius: .5em;
   padding: 1em;
 }
 
 h2, h3 {
+  color: #5C4713;
   margin-bottom: .5em;
   width: 100%;
 }
@@ -225,10 +234,14 @@ h2, h3 {
 #weather-current span {
   display: block;
   margin: .5em 0;
+  white-space: pre;
 }
 
-#weather-current span[data-index-color] a {
+#weather-current span[data-index-color] a,
+#weather-current span[data-index-color] a:hover {
   border-radius: .2em;
+  color: #333333;
+  text-decoration: none;
   padding: .2em;
 }
 
@@ -236,13 +249,17 @@ h2, h3 {
   content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
   
   padding: 0px 3px 0px 5px;
-  /*background: #F6D55C;*/
+  /*background: #FFFFFF;*/
 }
 
 #weather-current span::before {
-  background: #F6D55C;
+  background: #FFFFFF;
   content: attr(data-data) ': ';
   display: inline-block;
+}
+
+#weather-current span::after {
+  content: attr(data-scale);
 }
 
 #weather-forecast {
@@ -268,10 +285,10 @@ ol li {
 }
 
 ol li {
-  background: linear-gradient(-30deg, #20639b, #5b8fba);
-  border: 1px solid #3e3e3e;
+  background: #FFFDF5; /*linear-gradient(-30deg, #20639b, #5b8fba);*/
+  border: 1px solid #F9E5A0;
   border-radius: .3em;
-  color: #f6d55c;
+  color: #8C6D1F;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -286,14 +303,26 @@ ol li:first-child {
 
 ol li span {
   flex-grow: 1;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
-ol li span:before {
+ol li span.forecast-date {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  padding-bottom: 100px;
+  white-space: nowrap;
+}
+
+ol li span::before {
   content: attr(data-data) ': ';
   display: inline-block;
 }
 
-ol li span:first-child:before {
+ol li span::after {
+  content: attr(data-scale);
+}
+
+ol li span:first-child::before {
   display: none;
 }

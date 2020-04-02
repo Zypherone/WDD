@@ -27,7 +27,7 @@ function success(position) {
 }
 
 function error() {
-  search = 'New York';
+  search = 'New York, US';
   getWeatherData(true); 
   //status.textContent = 'Unable to retrieve your location';
 }
@@ -65,17 +65,27 @@ var uvColorIndex = [
 var template = {
   info: {
     location: $('<h2>'),
-    temperature: $('<span>').attr('data-data', 'Temperature'),
-    humidity: $('<span>').attr('data-data', 'Humidity'),
-    windSpeed: $('<span>').attr('data-data', 'Wind Speed'),
+    temperature: $('<span>')
+      .attr('data-data', 'Temperature')
+      .attr('data-scale', '°C'),
+    humidity: $('<span>')
+      .attr('data-data', 'Humidity')
+      .attr('data-scale', '%'),
+    windSpeed: $('<span>')
+      .attr('data-data', 'Wind Speed')
+      .attr('data-scale', 'kh/m'),
     uvIndex: $('<span>').attr('data-data', 'UV Index')
   },
   forecast: function() {
     return {
       info: $('<li>'),
-      date: $('<span>'),
-      temp: $('<span>').attr('data-data', 'Temp'),
-      humidity: $('<span>').attr('data-data', 'Humd')
+      date: $('<span class="forecast-date">'),
+      temp: $('<span>')
+        .attr('data-data', 'Temp')
+        .attr('data-scale', '°C'),
+      humidity: $('<span>')
+        .attr('data-data', 'Humd')
+        .attr('data-scale', '%')
     }
   }
 }
@@ -136,26 +146,21 @@ function getWeatherData(local) {
       ', ' +
       data.weather.sys.country +
       ' (' +
-      moment(data.uvi.date_iso).format('llll') +
+        moment(data.weather.dt, 'X').format('llll') +
       ')'
     );
     
-    template.info.temperature.html(data.weather.main.temp + '&#8451;');
+    template.info.temperature.html(data.weather.main.temp);
     template.info.humidity.html(data.weather.main.humidity);
-    template.info.windSpeed.html(data.weather.wind.speed);
+
+    // Need implement i nicer rounded value with decimal placement.
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
+    template.info.windSpeed.html(Math.floor(data.weather.wind.speed *1.609344));
 
     var imageIcon = iconURL.replace('{ICON}', data.weather.weather[0].icon);
 
-    var history = $('<li>')
-      .html(
-        data.weather.name +
-        ', ' +
-        data.weather.sys.country
-      );
-
-    $('#weather-history-results').prepend(history);
-
     var uvIdx = Math.floor(data.uvi.value);
+        uvIdx = uvIdx > 11 ? 11 : uvIdx;
     var uvColor = Object.keys(uvColorIndex[uvIdx])[0];
     
     template.info.uvIndex
@@ -190,8 +195,15 @@ function getWeatherData(local) {
 
       var day = template.forecast();
       
+     
+
+      var imageIcon = iconURL.replace('{ICON}', data.forecast.list[k].weather[0].icon);
+
       day.info.append(
-        day.date.html(moment(data.forecast.list[k].dt_txt).format('ddd (DD/MM)')),
+        day.date
+          .html(moment(data.forecast.list[k].dt_txt).format('ddd (DD/MM)'))
+          .attr('style', 'background-image: url(' + imageIcon + ')')
+          .attr('title', data.forecast.list[k].dt_txt),
         day.temp.html(data.forecast.list[k].main.temp),
         day.humidity.html(data.forecast.list[k].main.humidity),
       );
@@ -200,9 +212,50 @@ function getWeatherData(local) {
         .append(day.info);
     }
 
+    // Build History    
+    buildSearchHistory(data.weather.name, data.weather.sys.country);
+  }
+
+  // History Search function
+  function buildSearchHistory(city, country) {
+    
+    //searchObj = [city + ', ' + country]
+
+    var localData = localStorage.getItem('history');
+    var searchObj = localData ? JSON.parse(localData) : [];
+    var searchQuery = city + ', ' + country;
+
+    // Check if it exists in the history
+    var index = searchObj.indexOf(searchQuery);
+    if (index>0) {
+      searchObj.slice(index, 1);
+      $('#weather-history-results li')[index].remove();
+    }
+
+    searchObj.push(searchQuery);
+
+    localStorage.setItem('history', JSON.stringify(searchObj));
+
+    var history = $('<li>').html(searchQuery);
+
+    $('#weather-history-results').prepend(history);
+
   }
 
 }
+
+function showLastHistorySearch() {
+
+  var localData = localStorage.getItem('history');
+  var searchObj = localData ? JSON.parse(localData) : [];
+
+  searchObj.forEach(function(key) {
+    var history = $('<li>').html(key);
+    $('#weather-history-results').prepend(history);
+  });
+}
+
+showLastHistorySearch();
 
 $(document).on('click', '#weather-history-results li', function() {
   search = $(this).text();
@@ -215,11 +268,13 @@ $('#input-search').keypress(function(event){
 
   if(keycode == '13'){
     search = $('#input-search').val();
+    $('#input-search').val('');
     getWeatherData();
   }
 });
 
 $('#input-submit').on('click', function() {
   search = $('#input-search').val();
+  $('#input-search').val('');
   getWeatherData();
 });
