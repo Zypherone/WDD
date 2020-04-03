@@ -14,6 +14,6 @@ https://zypherone.github.io/WDD [example](https://zypherone.github.io/WDD)
 
 ## Screenshots of examples
 
-![Screenshot](screenshot-1.jpg?raw=true "Screenshot")
+![Screenshot](screenshot-01.jpg?raw=true "Screenshot")
 
 
