@@ -10,7 +10,7 @@ Numbered list:
 
 To view a demo of this app, please click the example link below:
 
-https://zypherone.github.io/AMT [example](https://zypherone.github.io/AMT)
+https://zypherone.github.io/WDD [example](https://zypherone.github.io/WDD)
 
 ## Screenshots of examples
 
