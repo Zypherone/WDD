@@ -3,8 +3,6 @@
  * Update this section to change any configurations below
 */
 
-//uvi?lat=37.75&lon=-122.37&
-
 var appParam = '';
 
 var apiKey   = '469a1bcd8ede3e2121d54a82776ffc16',
@@ -22,28 +20,30 @@ function success(position) {
   localCoords = '&lat=' + latitude + '&lon=' + longitude;
 
   getWeatherData(true); 
-
-  //console.log(`Latitude: ${latitude} °, Longitude: ${longitude} °`);
 }
 
+/**
+ * Throw a default for geolocation error.
+ */
 function error() {
   search = 'New York, US';
   getWeatherData(true); 
-  //status.textContent = 'Unable to retrieve your location';
 }
 
 if (!navigator.geolocation) {
+  // Prepare a nicer error statement
   //status.textContent = 'Geolocation is not supported by your browser';
 } else {
-  //status.textContent = 'Locating…';
   navigator.geolocation.getCurrentPosition(success, error);
 }
 
 // END CONFIG SECTION
 
-//endPoint = 'https://raw.githubusercontent.com/Zypherone/WDD/master/weather.json';
-//var query = '&q=london';
-var queryURL = endPoint;// + query;
+var queryURL = endPoint;
+
+/**
+ * Build an UV index to provide different levels of extremity
+ */
 
 var uvColorIndex = [
   /* 0 */ { green: 'low' }, 
@@ -92,6 +92,11 @@ var template = {
 
 var apiCall = ['forecast', 'weather'];
 
+/**
+ * Fetch data from API.
+ * @param {*} local 
+ */
+
 function getWeatherData(local) {
 
   var data = {};
@@ -99,10 +104,10 @@ function getWeatherData(local) {
   var param,
       complete = false;
 
+  // Prepare api param for weather api
   apiCall.forEach(callApi);
 
   function callApi(page) {
-
     switch(page) {
       case 'weather':
       case 'forecast':
@@ -111,18 +116,24 @@ function getWeatherData(local) {
     }
 
     callbackWeather(page);
-
   }
 
+  /**
+   * Make api call
+   * @param {*} page 
+   * @param {*} complete 
+   */
   function callbackWeather(page, complete) {
 
     $.ajax({
+      // Correct queryURI based on the api page needed to be accessed.
       url: queryURL.replace('{PAGE}', page) + param,
       method: "GET"
     })
     .then(function(response) {
     
       if (response.city) {
+        // Lets get the UV index by setting new param and fetching from the API
         param = '&lat=' + response.city.coord.lat + '&lon=' + response.city.coord.lon;
         callbackWeather('uvi', true);
       }
@@ -137,10 +148,15 @@ function getWeatherData(local) {
 
   }
 
+  /**
+   * Construct the weather dashdboard.
+   */
   function buildWeatherData() {
 
+    // Empty out existing data from dashboard
     $('#weather-detailed').empty();
 
+    // Apply city location, name and date. Moment.js for date formatting
     template.info.location.html(
       data.weather.name +
       ', ' +
@@ -150,19 +166,29 @@ function getWeatherData(local) {
       ')'
     );
     
+    // Apply temp and humidity
     template.info.temperature.html(data.weather.main.temp);
     template.info.humidity.html(data.weather.main.humidity);
 
-    // Need implement i nicer rounded value with decimal placement.
-    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
+    /**
+     * Need implement a nicer rounded value with decimal placement.
+     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
+     * 
+     * Apply wind speed
+     */
     template.info.windSpeed.html(Math.floor(data.weather.wind.speed *1.609344));
 
+    // Prepare icon and set.
     var imageIcon = iconURL.replace('{ICON}', data.weather.weather[0].icon);
 
+    // Take reference of uvIdx array to apply.
     var uvIdx = Math.floor(data.uvi.value);
         uvIdx = uvIdx > 11 ? 11 : uvIdx;
     var uvColor = Object.keys(uvColorIndex[uvIdx])[0];
     
+    /**
+     * Build a basic template structure for the dashboard.
+     */
     template.info.uvIndex
       .html('')
       .attr('data-index-color', uvColor)
@@ -189,13 +215,14 @@ function getWeatherData(local) {
 
     $('#forecast-info').empty();
 
+    // Build the five day forecast
     for(i=0;i<5;i++) {
       
+      // Ensure time is calculated by 8, to make 24 hours in a day as data is provided in 3 hour blocks.
       var k = i*8;
 
-      var day = template.forecast();
-      
-     
+      // Obtain forecast template
+      var day = template.forecast();     
 
       var imageIcon = iconURL.replace('{ICON}', data.forecast.list[k].weather[0].icon);
 
@@ -216,11 +243,9 @@ function getWeatherData(local) {
     buildSearchHistory(data.weather.name, data.weather.sys.country);
   }
 
-  // History Search function
+  // Search history function
   function buildSearchHistory(city, country) {
     
-    //searchObj = [city + ', ' + country]
-
     var localData = localStorage.getItem('history');
     var searchObj = localData ? JSON.parse(localData) : [];
     var searchQuery = city + ', ' + country;
@@ -232,18 +257,23 @@ function getWeatherData(local) {
       $('#weather-history-results li')[index].remove();
     }
 
+    // Push lasted query into object before storing.
     searchObj.push(searchQuery);
 
+    // Set history into local storage, once data has been turned into a string.
     localStorage.setItem('history', JSON.stringify(searchObj));
 
+    // Push history into the browser.
     var history = $('<li>').html(searchQuery);
-
     $('#weather-history-results').prepend(history);
 
   }
 
 }
 
+/**
+ * Function to pull last history from localstorage and display to browser.
+ */
 function showLastHistorySearch() {
 
   var localData = localStorage.getItem('history');
@@ -255,13 +285,21 @@ function showLastHistorySearch() {
   });
 }
 
+/**
+ * Init the last history search.
+ */
 showLastHistorySearch();
+
+/**
+ * Prepare all the click events
+ */
 
 $(document).on('click', '#weather-history-results li', function() {
   search = $(this).text();
   getWeatherData();
 });
 
+// Add ability to press enter for search field.
 $('#input-search').keypress(function(event){
 
   var keycode = (event.keyCode ? event.keyCode : event.which);
